@@ -1,40 +1,67 @@
-function addNums(num1: number, num2: number):number{ // if not indicated will be inferred
-	return num1+num2;
+class Department2{
+	// protected name fields <--- will be accessible in derived class
+	protected employees: string[] = [];
+	// constructor
+	constructor(private readonly id: number, public name: string){}
+
+	describe(this: Department2){
+		console.log(`Department: ${this.name}`);
+	}
+
+	addEmployee(employee: string){
+		this.employees.push(employee);
+	}
+
+	printEmployeeInformation(){
+		console.log(this.employees.length);
+		console.log(this.employees);
+	}
+}
+//can only inherit from one class like in Java
+class ITDepartment extends Department2 {
+// will inherit everything what base class has
+	admins: string[];
+	private lastReport: string;
+
+	//getter won't be access as function but property 
+	// E.g: accounting.mostRecentReport
+	get mostRecentReport(){
+		if(this.lastReport){
+			return this.lastReport;
+		}
+		throw new Error('No report found.');
+	}
+    
+	// setter won't be access as function but property 
+	// E.g: accounting.mostRecentReport = 'New Report: blah blah'
+	set mostRecentReport(value: string){
+		if(!value){
+			throw new Error('Please specify report!!!');
+		}
+		this.addReport(value);
+	}
+
+	constructor(id: number, admins: string[], private reports: string[]){
+		super(id,'IT');
+		this.admins = admins;
+		this.lastReport = reports[0];
+	}
+
+	addEmployee(employee: string){
+		this.employees.push(employee);
+	}
+
+	addReport(text: string){
+		this.reports.push(text);
+		this.lastReport = text;
+	}
 }
 
-// undefined VS void
+const accounting = new Department2(1, "Accounting");
+accounting.addEmployee("Max");
+accounting.addEmployee('Alex');
+accounting.describe();
 
-function printResults(num: number){
-	console.log('Result: '+num);
-	return;
-} // can be void and undefined
+// const accountingCopy = {name:"Copy of Accounting", describe: accounting.describe};
 
-function printResults2(num: number){
-	console.log('Result: '+num);
-} // just void as a return type
-
-// type of functions
-
-let combineValues: (a: number, b: number, callback: (num: number)=> void) => number; // returning value
-					// more specific values of params
-combineValues = addNums;
-
-// unknown types
-
-let userInput: unknown;
-let userName: string;
-
-userInput = 5; // it is now number
-userInput = 'pokemon'; // it is now string
-// userName = userInput; <-------  unknown is not assignable to string
-if(typeof userInput === 'string'){  // <---------- solution
-	userName = userInput;
-}
-
-// never type
-
-function generateError(message: string, code: number): never{
-	throw {message,errorCode: code};
-}
-
-generateError('An error has occured!', 500);
+// accountingCopy.describe();
