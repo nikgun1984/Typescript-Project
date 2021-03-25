@@ -22,7 +22,19 @@ const e1: ElevatedEmployee = {
 	startDate: new Date()
 }
 
+// Optional Chaining
+
+//console.log(e1?.meetingDates); // ? used instead of chaining like with "&&" operator
+							   // e1.meetingDates && e1.meetingDates.month
+
 ////////////////////////////////////////////////////////////////
+
+// NULLish Coalescing
+
+const input = '';
+
+const storedData = input ?? 'DEFAULT'; // will print ""
+// const storedData = input || 'DEFAULT'; // will print "DEFAULT"
 
 // ABOUT TYPE GUARDS
 
